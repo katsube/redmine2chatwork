@@ -9,9 +9,9 @@
     2. [APIアクセスキーを取得](#apiアクセスキーを取得)
     3. [ProjectIDを取得](#projectidを取得)
 1. [GoogleAppsScriptの設定](#googleappsscriptの設定)
-    1. アプリを追加
-    2. GASプロジェクトの作成
-    3. スクリプトをセットし実行
+    1. [アプリを追加](#アプリを追加)
+    2. [GASプロジェクトの作成](#gasプロジェクトの作成)
+    3. [スクリプトをセットし実行](#スクリプトをセットし実行)
 
 ## Chatwork
 ### APITokenを取得
@@ -88,4 +88,7 @@ Google Apps Scriptの項目を見つけ（もしくは検索し）、`+接続`�
 `実行`→`関数を実行`→`executeMe`とたどります。  
 ![GAS](document/image/setup_gas009.png "GAS9")
 
-このあと指定したChatworkの部屋に投稿されていれば成功です。
+このあと指定したChatworkの部屋に投稿されていれば成功です。  
+必要に応じて`編集`→`すべてのトリガーを作成`から自動的に実行される条件などを指定してみてください。
+
+enjoy!
