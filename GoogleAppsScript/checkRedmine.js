@@ -56,6 +56,11 @@ var DEFINE = {
 		,    'len': 25		// 最大文字数
 		,   'char': '…'		// 置き換える文字(空文字列でもOK)
 	}
+	//チャットワーク関連
+	, 'chatwork':{
+		  'max_strlen': 65534
+		, 'min_strlen': 0
+	}
 }; // DEFINE
 
 
@@ -191,6 +196,13 @@ function getRedmineTicket(redmine, id){
  * @access public
  */
 function sendMessage(token, room_id, msg) {
+  //Vlidation
+  var len = bytes2(msg);
+  if( (len === null) || !( DEFINE.chatwork.min_strlen <= len && len <= DEFINE.chatwork.max_strlen ) ){
+    Logger.log("[sendMessage] msg is too long or too short");
+    return(false);
+  }
+
   var client = ChatWorkClient.factory({token: token});
   client.sendMessage({
       room_id: room_id
@@ -204,6 +216,8 @@ function sendMessage(token, room_id, msg) {
  * @param {String}  str        対象とする文字列
  * @param {Integer} width      最大文字数
  * @param {String}  trimmarker 置き換える文字列
+ * @return {String}
+ * @access public
  */
 function strimwidth(str, width, trimmarker){
 	if( str.length > width ){
@@ -212,4 +226,23 @@ function strimwidth(str, width, trimmarker){
 	else{
 	  return(str);
 	}
-  }
+}
+
+/**
+ * 指定文字列のバイト数を返却する
+ * (thanx! https://qiita.com/xtetsuji/items/a8490a7fea3f5a01e49c )
+ *
+ * @param {String} str 指定文字列
+ * @return {Integer}
+ * @access public
+ */
+function bytes2(str) {
+	if(typeof str !== 'string'){
+		return(null);
+	}
+	if(str === ""){
+		return(0);
+	}
+
+	return(encodeURIComponent(str).replace(/%../g,"x").length);
+}
