@@ -50,17 +50,17 @@ var CONFIG = {
 };  // CONFIG
 
 var DEFINE = {
-	//チケット名が長い場合に省略する
-	'trim': {
-		  'enable': true	// falseにすると省略しない
-		,    'len': 25		// 最大文字数
-		,   'char': '…'		// 置き換える文字(空文字列でもOK)
-	}
-	//チャットワーク関連
-	, 'chatwork':{
-		  'max_strlen': 65534
-		, 'min_strlen': 0
-	}
+  //チケット名が長い場合に省略する
+  'trim': {
+      'enable': true  // falseにすると省略しない
+    ,    'len': 25    // 最大文字数
+    ,   'char': '…'    // 置き換える文字(空文字列でもOK)
+  }
+  //チャットワーク関連
+  , 'chatwork':{
+      'max_strlen': 65534
+    , 'min_strlen': 0
+  }
 }; // DEFINE
 
 
@@ -93,8 +93,8 @@ function executeMe(){
 function checkRedmineTicket(target){
   //validation
   if( target in CONFIG === false){
-	Logger.log("[checkRedmineTicket] Error: undefined CONFIG(" + target + ")");
-	return(false);
+    Logger.log("[checkRedmineTicket] Error: undefined CONFIG(" + target + ")");
+    return(false);
   }
 
   var conf = CONFIG[target];
@@ -114,24 +114,24 @@ function checkRedmineTicket(target){
     var member  = conf.Member[i];
 
     // Redmineからメンバーのチケット情報を取得
-	var buff    = getRedmineTicket(conf.Redmine, member.rd);
-	var tickets = buff.issues;
-	var total   = buff.total_count;
+    var buff    = getRedmineTicket(conf.Redmine, member.rd);
+    var tickets = buff.issues;
+    var total   = buff.total_count;
     var len_t   = tickets.length;
 
     // 担当者の設定なしチケット
     if(member.name === null){
-		if(len_t === 0){
-			continue;
-		}
-		else{
-			message = "担当者が未設定のチケットがあるよ。\n\n";
-		}
-	}
+      if(len_t === 0){
+        continue;
+      }
+      else{
+        message = "担当者が未設定のチケットがあるよ。\n\n";
+      }
+    }
     // 担当者の設定ありチケット
     else{
-	  // 担当者へTo
-	  message = "[To:"+ member.cw +"] "+ member.name + " さん\n";
+      // 担当者へTo
+      message = "[To:"+ member.cw +"] "+ member.name + " さん\n";
       message += member.name + " さんの担当しているチケットは全"+ total +"件だよ\n\n";
     }
 
@@ -142,10 +142,10 @@ function checkRedmineTicket(target){
       var priority = tickets[j].priority.name;   //通常、重要、急いで...
       var subject  = tickets[j].subject;         //チケット名
 
-	  // チケット名が長い場合は省略する
-	  if( DEFINE.trim.enable ){
-		subject = strimwidth(subject, DEFINE.trim.len, DEFINE.trim.char);
-	  }
+      // チケット名が長い場合は省略する
+      if( DEFINE.trim.enable ){
+        subject = strimwidth(subject, DEFINE.trim.len, DEFINE.trim.char);
+      }
 
       message += j+1 + ". ["+tracher+"] " + subject + "("+priority+") " +  conf.Redmine.issueurl+id + "\n";
     }
@@ -225,12 +225,12 @@ function sendMessage(token, room_id, msg) {
  * @access public
  */
 function strimwidth(str, width, trimmarker){
-	if( str.length > width ){
-	  return( str.substr(0, width) + trimmarker );
-	}
-	else{
-	  return(str);
-	}
+  if( str.length > width ){
+    return( str.substr(0, width) + trimmarker );
+  }
+  else{
+    return(str);
+  }
 }
 
 /**
@@ -242,12 +242,12 @@ function strimwidth(str, width, trimmarker){
  * @access public
  */
 function bytes2(str) {
-	if(typeof str !== 'string'){
-		return(null);
-	}
-	if(str === ""){
-		return(0);
-	}
+  if(typeof str !== 'string'){
+    return(null);
+  }
+  if(str === ""){
+    return(0);
+  }
 
-	return(encodeURIComponent(str).replace(/%../g,"x").length);
+  return(encodeURIComponent(str).replace(/%../g,"x").length);
 }
