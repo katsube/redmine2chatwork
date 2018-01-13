@@ -114,7 +114,9 @@ function checkRedmineTicket(target){
     var member  = conf.Member[i];
 
     // Redmineからメンバーのチケット情報を取得
-    var tickets = getRedmineTicket(conf.Redmine, member.rd);
+	var buff    = getRedmineTicket(conf.Redmine, member.rd);
+	var tickets = buff.issues;
+	var total   = buff.total_count;
     var len_t   = tickets.length;
 
     // 担当者の設定なしチケット
@@ -130,7 +132,7 @@ function checkRedmineTicket(target){
     else{
 	  // 担当者へTo
 	  message = "[To:"+ member.cw +"] "+ member.name + " さん\n";
-      message += member.name + " さんの担当しているチケットは"+ len_t +"件だよ\n\n";
+      message += member.name + " さんの担当しているチケットは全"+ total +"件だよ\n\n";
     }
 
     // チケットを一覧にする
@@ -185,7 +187,7 @@ function getRedmineTicket(redmine, id){
   var response = UrlFetchApp.fetch(url);
   var results  = JSON.parse(response.getContentText());
 
-  return(results.issues);
+  return(results);
 }
 
 /**
