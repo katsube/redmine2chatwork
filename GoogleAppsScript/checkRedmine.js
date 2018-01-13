@@ -180,6 +180,8 @@ function getRedmineTicket(redmine, id){
               + '&limit='          + encodeURIComponent(redmine.limit)
               + '&sort='           + encodeURIComponent(redmine.sort)
               + '&assigned_to_id=' + encodeURIComponent(id);
+  Logger.log("[getRedmineTicket] " + url);
+
   var response = UrlFetchApp.fetch(url);
   var results  = JSON.parse(response.getContentText());
 
@@ -199,10 +201,11 @@ function sendMessage(token, room_id, msg) {
   //Vlidation
   var len = bytes2(msg);
   if( (len === null) || !( DEFINE.chatwork.min_strlen <= len && len <= DEFINE.chatwork.max_strlen ) ){
-    Logger.log("[sendMessage] msg is too long or too short");
+    Logger.log("[sendMessage][Error] msg is too long or too short");
     return(false);
   }
 
+  Logger.log("[sendMessage] " + token + "," + room_id + "," + msg);
   var client = ChatWorkClient.factory({token: token});
   client.sendMessage({
       room_id: room_id
