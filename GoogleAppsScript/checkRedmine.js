@@ -112,12 +112,19 @@ function checkRedmineTicket(target){
     var tickets = getRedmineTicket(conf.Redmine, member.rd);
     var len_t   = tickets.length;
 
-    // 担当者へTo
-    if( (member.name === null) && (len_t > 0) ){
-      message = "担当者が未設定のチケットがあるよ。\n\n";
-    }
+    // 担当者の設定なしチケット
+    if(member.name === null){
+		if(len_t === 0){
+			continue;
+		}
+		else{
+			message = "担当者が未設定のチケットがあるよ。\n\n";
+		}
+	}
+    // 担当者の設定ありチケット
     else{
-      message = "[To:"+ member.cw +"] "+ member.name + " さん\n";
+	  // 担当者へTo
+	  message = "[To:"+ member.cw +"] "+ member.name + " さん\n";
       message += member.name + " さんの担当しているチケットは"+ len_t +"件だよ\n\n";
     }
 
