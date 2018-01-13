@@ -14,3 +14,10 @@
 
 ## License
 MIT License
+
+## Donate
+BTC: 3A9nH1j7qQdKrSTrmnEdweo6zPqpHBmkxC  
+ETH: 0x1aE0541198D1F9f2908a25C35032A473e74D3731  
+XP: XaQ9zv65F9ovfoMBrFGiPRG47aSHFhy8SX  
+MONA: MTKgzSiS5BDueZkRCHySih24TGFwHThaDQ (MonaCoin)  
+ZNY: Zhnpf4RFYVQTAQiyoJg9dGoeC4bgT3BoSy (BitZeny)  
