@@ -7,7 +7,7 @@
  *
  * Author: M.Katsube < katsubemakito@gmail.com >
  * License: MIT Lisence
- * CopyRight: 
+ * CopyRight: (C) 2018 M.katsube
  */
 
 var CONFIG = {
@@ -15,8 +15,8 @@ var CONFIG = {
       'CW_TOKEN':  'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'             //チャットワークAPIトークン
     , 'CW_ROOMID': '12345678'                                     //ルームID
     , 'Redmine':{
-           'token': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'    //Redmine
-      , 'endpoint': 'https://redmine.example.com/issues.json'     //Redmine API
+           'token': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'    //Redmine APIトークン
+      , 'endpoint': 'https://redmine.example.com/issues.json'     //Redmine APIエンドポイント
       ,  'project': 'foo'                                         //Redmine ProjectID
       ,    'limit': 50                                            //Redmine 取得件数
       ,     'sort': 'priority:desc'                               //Redmine ソート順
@@ -49,19 +49,29 @@ var CONFIG = {
 */
 };  // CONFIG
 
+var DEFINE = {
+	//チケット名が長い場合に省略する
+	'trim': {
+		  'enable': true	// falseにすると省略しない
+		,    'len': 25		// 最大文字数
+		,   'char': '…'		// 置き換える文字(空文字列でもOK)
+	}
+}; // DEFINE
+
+
+
 /**
  * トリガーにセットする用関数
  *
- * @param  void
  * @return void
  * @access public
  */
 function executeMe(){
-  checkRedmineTicket('Me');  
+  checkRedmineTicket('Me');
 }
 /*
  * function executeFoo(){
- *   checkRedmineTicket('Foo');  
+ *   checkRedmineTicket('Foo');
  * }
  */
 
@@ -71,13 +81,18 @@ function executeMe(){
 /**
  * Redmineからチケット情報を取得しChatworkに投げる
  *
- * @param  target String
+ * @param  {String} target 使用するCONFIG
  * @return void
  * @access public
  */
 function checkRedmineTicket(target){
+  //validation
+  if( target in CONFIG === false){
+	Logger.log("[checkRedmineTicket] Error: undefined CONFIG(" + target + ")");
+	return(false);
+  }
+
   var conf = CONFIG[target];
-  var now  = new Date().getTime();
   var len  = conf.Member.length;
 
   //--------------------------------------------------
@@ -112,7 +127,12 @@ function checkRedmineTicket(target){
       var tracher  = tickets[j].tracker.name;    //タスク、要件定義...
       var priority = tickets[j].priority.name;   //通常、重要、急いで...
       var subject  = tickets[j].subject;         //チケット名
-      
+
+	  // チケット名が長い場合は省略する
+	  if( DEFINE.trim.enable ){
+		subject = strimwidth(subject, DEFINE.trim.len, DEFINE.trim.char);
+	  }
+
       message += j+1 + ". ["+tracher+"] " + subject + "("+priority+") " +  conf.Redmine.issueurl+id + "\n";
     }
 
@@ -136,9 +156,9 @@ function checkRedmineTicket(target){
 /**
  * Redmineからチケット情報を取得
  *
- * @param  redmine Object
- * @oaram  id      Integer
- * @return Object
+ * @param  {Object}  redmine CONFIG.[TARGET].Redmine
+ * @param  {Integer} id      Redmine上のユーザーID
+ * @return {Object}
  * @access public
  */
 function getRedmineTicket(redmine, id){
@@ -150,20 +170,20 @@ function getRedmineTicket(redmine, id){
               + '&assigned_to_id=' + encodeURIComponent(id);
   var response = UrlFetchApp.fetch(url);
   var results  = JSON.parse(response.getContentText());
-  
+
   return(results.issues);
 }
 
 /**
  * Chatworkにメッセージ送信
  *
- * @param  token   String
- * @param  room_id Integer
- * @param  msg     String
+ * @param  {String}  token   APIトークン
+ * @param  {Integer} room_id 部屋ID
+ * @param  {String}  msg     投稿する文字列
  * @return void
  * @access public
  */
-function sendMessage(token, room_id, msg) { 
+function sendMessage(token, room_id, msg) {
   var client = ChatWorkClient.factory({token: token});
   client.sendMessage({
       room_id: room_id
@@ -171,3 +191,18 @@ function sendMessage(token, room_id, msg) {
   });
 }
 
+/**
+ * 文字列を指定文字数でカットする
+ *
+ * @param {String}  str        対象とする文字列
+ * @param {Integer} width      最大文字数
+ * @param {String}  trimmarker 置き換える文字列
+ */
+function strimwidth(str, width, trimmarker){
+	if( str.length > width ){
+	  return( str.substr(0, width) + trimmarker );
+	}
+	else{
+	  return(str);
+	}
+  }
