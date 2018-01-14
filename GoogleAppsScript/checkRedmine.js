@@ -16,11 +16,10 @@ var CONFIG = {
     , 'CW_ROOMID': '12345678'                                     //ルームID
     , 'Redmine':{
            'token': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'    //Redmine APIトークン
-      , 'endpoint': 'https://redmine.example.com/issues.json'     //Redmine APIエンドポイント
+      ,  'urlbase': 'https://redmine.example.com'                 //Redmineを設置したURL(最後にスラッシュを付加しない)
       ,  'project': 'foo'                                         //Redmine ProjectID
       ,    'limit': 50                                            //Redmine 取得件数
       ,     'sort': 'priority:desc,due_date'                      //Redmine ソート順
-      , 'issueurl': 'https://redmine.example.com/issues/'         //Redmine チケットのURL
     }
     , 'Member':[
             {'name':'foo', 'rd':1,    'cw':100001}   //ユーザー名、Redmineでのid、ChatworkでのIDをセット
@@ -96,9 +95,7 @@ function checkRedmineTicket(target){
     Logger.log("[checkRedmineTicket] Error: undefined CONFIG(" + target + ")");
     return(false);
   }
-
   var conf = CONFIG[target];
-  var len  = conf.Member.length;
 
   //--------------------------------------------------
   // 起動メッセージ
@@ -109,6 +106,8 @@ function checkRedmineTicket(target){
   //--------------------------------------------------
   // メンバー数分チェック
   //--------------------------------------------------
+  var len      = conf.Member.length;
+  var issueurl = conf.Redmine.urlbase + '/issues/';
   for(var i=0; i<len; i++){
     var message = '';
     var member  = conf.Member[i];
@@ -147,7 +146,7 @@ function checkRedmineTicket(target){
         subject = strimwidth(subject, DEFINE.trim.len, DEFINE.trim.char);
       }
 
-      message += j+1 + ". ["+tracher+"] " + subject + "("+priority+") " +  conf.Redmine.issueurl+id + "\n";
+      message += j+1 + ". ["+tracher+"] " + subject + "("+priority+") " +  issueurl+id + "\n";
     }
 
     // チャットワークへ送信
@@ -176,7 +175,8 @@ function checkRedmineTicket(target){
  * @access public
  */
 function getRedmineTicket(redmine, id){
-  var url = redmine.endpoint + '?'
+  var endpoint = redmine.urlbase + '/issues.json';
+  var url = endpoint + '?'
               + 'key='             + encodeURIComponent(redmine.token)
               + '&project_id='     + encodeURIComponent(redmine.project)
               + '&limit='          + encodeURIComponent(redmine.limit)
