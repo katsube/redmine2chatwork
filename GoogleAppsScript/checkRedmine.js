@@ -59,7 +59,7 @@ var DEFINE = {
   //チャットワーク関連
   , 'chatwork':{
       'max_strlen': 65534
-    , 'min_strlen': 0
+    , 'min_strlen': 1
   }
 }; // DEFINE
 
