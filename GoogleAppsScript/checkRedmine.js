@@ -19,7 +19,7 @@ var CONFIG = {
       , 'endpoint': 'https://redmine.example.com/issues.json'     //Redmine APIエンドポイント
       ,  'project': 'foo'                                         //Redmine ProjectID
       ,    'limit': 50                                            //Redmine 取得件数
-      ,     'sort': 'priority:desc'                               //Redmine ソート順
+      ,     'sort': 'priority:desc,due_date'                      //Redmine ソート順
       , 'issueurl': 'https://redmine.example.com/issues/'         //Redmine チケットのURL
     }
     , 'Member':[
